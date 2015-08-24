@@ -2,6 +2,10 @@ function led_only(l)
   write_big(bit.bxor(0xFFFF, bit.lshift(1, l - 1)))
 end
 
+function all_off()
+  write_big(0xFFFF)
+end
+
 _led_animation_delay = 62
 
 function led_stop()
@@ -38,6 +42,7 @@ function _led_animate_linear()
     end
   end
   led_only(_led_nr)
+  all_off()
 end
 
 function led_animate_linear(direction)

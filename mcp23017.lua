@@ -1,13 +1,14 @@
 mcp23017_address = 0x27
 i2c.setup(0, 3, 4, i2c.SLOW)
 
-function write_mcp(control,value)
+function write_mcp(...)
   i2c.start(0)
   i2c.address(0,mcp23017_address,i2c.TRANSMITTER)
-  i2c.write(0,control)
-  i2c.write(0,value)
+  for i, v in ipairs(arg) do
+    i2c.write(0,v)
+  end
   i2c.stop(0)
-end 
+end
 
 function read_mcp(control)
   i2c.start(0)
@@ -20,14 +21,14 @@ function read_mcp(control)
   return value
 end 
 
-write_mcp(0x12, 0xff)
-write_mcp(0x00, 0x00)
-write_mcp(0x13, 0xff)
-write_mcp(0x01, 0x00) 
+write_mcp(0x12, 0xff) -- make port A high
+write_mcp(0x00, 0x00) -- port A -> output
+write_mcp(0x13, 0xff) -- make port B high
+write_mcp(0x01, 0x00) -- port B -> output
+write_mcp(0x0A, 0x20) -- binary 00100000 - seqop=1 (disabled)
 
 function write_both(a, b)
-  write_mcp(0x12, a)
-  write_mcp(0x13, b)
+  write_mcp(0x12, a, b)
 end
 
 function write_big(v)

@@ -26,7 +26,6 @@ end
 ------------------------------------------
 
 function _led_animate_linear()
-  led_only(_led_nr)
   _led_nr = _led_nr + _led_direction
   -- Blah
   if _led_nr > 16 then
@@ -58,9 +57,10 @@ end
 -- Bounce animation
 ------------------------------------------
 
-function led_animate_bounce()
+function led_animate_bounce(delay)
   led_stop()
   _led_bounce = true
+  _led_animation_delay = delay or 62
   tmr.alarm(0, _led_animation_delay, 1, _led_animate_linear)
 end
 

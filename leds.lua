@@ -77,6 +77,12 @@ end
 
 function _led_animate_pulse()
   _led_animation_delay = _led_animation_delay + _led_direction
+  if _led_oneway and (_led_animation_delay <= 1 or _led_animation_delay >= _led_max_interval) then
+    if _led_oneway_cb then
+      _led_oneway_cb()
+    end
+    return
+  end
   if _led_animation_delay < 1 then
     _led_animation_delay = 2
     _led_direction = 1
@@ -90,6 +96,19 @@ end
 function led_animate_pulse(pulse_delay)
   led_stop()
   _led_pulse_delay = pulse_delay or _led_pulse_delay
+  tmr.alarm(0, 1, 0, led_flash_all)
+  tmr.alarm(1, _led_pulse_delay, 0, _led_animate_pulse)
+end
+
+function led_animate_fade(fade_in, cb, pulse_delay)
+  led_stop()
+  _led_pulse_delay = pulse_delay or _led_pulse_delay
+  _led_direction = fade_in and -1 or 1
+  _led_oneway = true
+  _led_oneway_cb = cb
+  if _led_animation_delay < 2 or _led_animation_delay >= _led_max_interval - 1 then
+    _led_animation_delay = fade_in and _led_max_interval or 1
+  end
   tmr.alarm(0, 1, 0, led_flash_all)
   tmr.alarm(1, _led_pulse_delay, 0, _led_animate_pulse)
 end

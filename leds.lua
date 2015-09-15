@@ -6,7 +6,6 @@ function all_off()
   write_big(0xFFFF)
 end
 
-_led_animation_delay = 62
 
 function led_stop()
   all_off()
@@ -19,6 +18,9 @@ function led_stop()
   _led_bounce = false
   _led_max_interval = 30
   _led_pulse_delay = 50
+  _led_oneway = false
+  _led_oneway_cb = nil
+  _led_animation_delay = 62
 end
 
 ------------------------------------------
@@ -60,7 +62,7 @@ end
 function led_animate_bounce(delay)
   led_stop()
   _led_bounce = true
-  _led_animation_delay = delay or 62
+  _led_animation_delay = delay or _led_animation_delay
   tmr.alarm(0, _led_animation_delay, 1, _led_animate_linear)
 end
 
